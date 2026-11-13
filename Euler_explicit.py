@@ -30,8 +30,10 @@ def T_analitica(x, t, Tc):
     T = Tc * np.ones(len(x))
 
     for n in range(1, 101):
-        T += (4 / ((2*n-1)**3 * np.pi**3)) * (1 - np.exp(-(2*n-1)**2 * np.pi**2 * t)) * np.sin((2*n-1) * np.pi * x)
-
+        bn = 4 / ((2*n-1) * np.pi)
+        
+        T += bn * ((1 - np.exp(-(2*n-1)**2 * np.pi**2 * t))/ ((2*n-1)**2 * np.pi**2)) * np.sin((2*n-1) * np.pi * x)
+        
     return T
 
 
@@ -103,7 +105,7 @@ plt.plot(x, T_exacta, linestyle = '--', label='Solució analítica', color = 'da
 
 plt.xlabel('x normalitzada')
 plt.ylabel('T normalitzada')
-plt.title('Comparació de les solucions')
+plt.title('Comparació de les solucions numèriques i analítica')
 plt.legend()
 plt.grid()
 plt.show()
