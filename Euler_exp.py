@@ -84,7 +84,7 @@ plt.plot(x, T_f[2], label='a = 0.25', color = 'limegreen')
 
 plt.xlabel('x normalitzada')
 plt.ylabel('T normalitzada')
-plt.title('Distribució de temperatura en funció de la posició')
+plt.title('Distribució de temperatura T en funció de la posició x')
 plt.legend()
 plt.grid()
 plt.show()
