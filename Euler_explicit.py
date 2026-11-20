@@ -17,12 +17,29 @@ x0 = 0.02
 t0 = 0.02**2/alpha
 tf = 0.025
 
+# Coordenades de la zona malalta 
+x1 = 0.0075
+x2 = 0.0125
+
+# Coordenades de la zona malalta normalitzades
+x1n = x1/x0
+x2n = x2/x0
+
 # Definim les temperatures normalitzades
 T0 = (0.472*(40/np.sqrt(2))**2)/0.56
 Tc = (36.50 + 273.15)/T0
+T50 = (50 + 273.15) / T0
+T80 = (80 + 273.15) / T0
 
 # Definim els punts espaials
 x = np.linspace(0, 1, Nx)
+
+# Definim la regió malalta
+regio_malalta = (x >= 0.375) & (x <= 0.625)
+
+# Definim la regió sana
+regio_sana = (x < 0.375) | (x > 0.625)
+
 
 # Definim la solució analítica
 
@@ -74,6 +91,47 @@ for s in dt:
     error = np.abs(T - T_exacta)
 
     errors.append(error)
+
+
+# Utilitzem el pas temporal estable a = 0.49 (amb dt[1]). També es pot fer servir a = 0.25 (amb dt[2])
+s = dt[1]
+gamma = s / dx**2
+
+# Definim la temperatura inicial
+T = Tc * np.ones(Nx)
+
+# Temps inicial
+temps = 0
+
+# Simulació fins que s'arribi a una condició de seguretat
+while True:
+
+    # Temperatura màxima de la regió sana
+    Tmax_sana = np.max(T[regio_sana])
+
+    # Temperatura màxima de tot el teixit
+    T_max = np.max(T)
+
+    # Comprovem les condicions de seguretat
+    if Tmax_sana >= T50 or T_max >= T80:
+        break
+
+    # Actualitzem la temperatura
+    T_nova = T.copy()
+
+    for j in range(1, Nx-1):
+        T_nova[j] = T[j] + gamma * (T[j+1] - 2*T[j] + T[j-1]) + s
+
+    T = T_nova
+
+    # Actualitzem el temps
+    temps += s
+
+# Convertim el temps normalitzat a segons
+temps_segons = temps * t0
+
+print("Temps del tractament t =", temps_segons, "s")
+
 
 
 # Representació gràfica de les resolucions numèriques
