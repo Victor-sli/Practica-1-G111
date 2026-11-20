@@ -255,7 +255,7 @@ temperatura a partir de la qual es poden produir fenòmens d'evaporació i altre
 
 Per estudiar l'evolució temporal i espacial de la temperatura, es modelitza la transferència de calor mitjançant l'equació de 
 Fourier en una dimensió, Eq. (\ref{fourier}), incorporant la generació de calor per efecte Joule. La resolució d'aquesta equació permet 
-simular el procés i analitzar-ne l'eficàcia sense posar en risc cap pacient. 
+simular el procés i analitzar-ne l'eficàcia sense haver de realitzar la intervenció. 
 
 Finalment, es resol el model mitjançant tres mètodes numèrics: Euler explícit, Euler implícit i Crank-Nicolson. Es comparen els 
 resultats obtinguts per als diferents mallats, estudiant-ne l'error numèric, l'estabilitat i la precisió, amb la finalitat de 
@@ -272,7 +272,7 @@ La llei de Fourier per la temperatura és:
     \label{fourier}
 \end{equation}
 
-on $c_v$ és el calor específic, $\rho$ és la densitat, $\kappa$ és la conductivitat tèrmica i $P_{\text{ex6}}$ representa totes 
+on $c_v$ és el calor específic, $\rho$ és la densitat, $\kappa$ és la conductivitat tèrmica i $P_{\text{ext}}$ representa totes 
 les fonts de calor externes. Per aquest problema considerarem que l'única font de calor externa és la calor produïda pels 
 elèctrodes que generen calor per efecte Joule.
 
@@ -307,15 +307,35 @@ Els valors numèrics emprats en aquesta pràctica són:
 
 \subsection{Discretització del sistema}
 
-Per aquest model, considerem un mallat espacial amb un nombre de punts $N$ = 101 i d'amplada $\Delta x = 0.01$ (normalitzat). 
-En el cas del mallat temporal fem servir 3 diferents:
+La discretització del sistema difereix en els mètodes aplicats en aquesta pràctica.
+
+En el cas del mètode d'Euler explícit, considerem un mallat espacial amb un nombre de punts $N$ = 101 i d'amplada $\Delta \widetilde{x} = 0.01$ (normalitzat). 
+Pel mallat temporal, considerem aquests tres (també normalitzats):
 \begin{equation*}
-    \Delta t = 0.51 (\Delta x)^2 = 5.1 \cdot 10^{-5}, \quad \Delta t = 0.49 (\Delta x)^2 = 4.9 \cdot 10^{-5}, \quad \Delta t = 0.25 (\Delta x)^2 = 2.5 \cdot 10^{-5}
+    \Delta \widetilde{t} = 0.51 (\Delta \widetilde{x})^2 = 5.1 \cdot 10^{-5}, \quad \Delta \widetilde{t} = 0.49 (\Delta \widetilde{x})^2 = 4.9 \cdot 10^{-5}, \quad \Delta \widetilde{t} = 0.25 (\Delta \widetilde{x})^2 = 2.5 \cdot 10^{-5}
 \end{equation*}
 
-Amb un nombre de punts $N_t$ igual a 490, 510 i 1000 respectivament.
+Amb un nombre de punts temporals iguals a 490, 510 i 1000, respectivament.
+
+Per l'altra banda, en el cas dels mètodes d'Euler implícit i Crank-Nicolson, considerem el mateix mallat espacial que a l'Euler 
+implícit. En el cas de la discretització temporal, estudiem els següents dos mallats:
+\begin{equation*}
+    \Delta \widetilde{t} = (\Delta \widetilde{x})^2, \quad \Delta \widetilde{t} = 0.5 (\Delta \widetilde{x})^2
+\end{equation*}
+
+Amb un nombre de punts temporals iguals a 250 i 500, respectivament.
 
 \subsection{Condicions inicials i de contorn}
+
+El problema es defineix amb una equació diferencial en derivades parcials. Per solucionar aquest problema cal conèixer les condicions 
+inicials i les condicions de contorn a les fronteres. Volem modelitzar una operació cardíaca de manera que considerem la temperatura 
+inicial com la temperatura mitjana del cos humà, uns $T_c = 36.5$ $\circ$C. A més, com que el teixit de l'estudi es troba a dins 
+del cor i envoltat per grans quantitats de sang en circulació contínua, podem considerar que la temperatura a les fronteres és 
+la mateixa que la del cos, és a dir, $T_c$.
+
+
+\subsection{Mètode d'Euler explícit}
+
 
 
 
