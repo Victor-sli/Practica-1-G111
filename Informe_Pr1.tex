@@ -1,0 +1,322 @@
+
+% ==================================================
+% 1. CLASSE DEL DOCUMENT
+% ==================================================
+\documentclass[a4paper,12pt,oneside]{article}
+
+% ==================================================
+% 2. PAQUETS ESSENCIALS (IDIOMA I CODIFICACIÓ)
+% ==================================================
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[catalan]{babel}
+\usepackage{lmodern}
+
+% ==================================================
+% 3. FORMAT DEL TEXT I DELS PARÀGRAFS
+% ==================================================
+\setlength{\parindent}{0.5cm}
+\usepackage{indentfirst}
+
+\usepackage{setspace}
+\singlespacing
+
+% ==================================================
+% 4. MATEMÀTIQUES
+% ==================================================
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathtools}
+\usepackage{bm}
+\usepackage{siunitx}
+
+% ==================================================
+% 5. DISSENY I FORMAT DE LA PÀGINA
+% ==================================================
+\usepackage{geometry}
+\geometry{
+    a4paper,
+    margin=2.5cm,
+    top=2.5cm,
+    bottom=2.5cm
+}
+
+\raggedbottom
+
+% ==================================================
+% 6. TÍTOLS I SECCIONS
+% ==================================================
+\usepackage{titlesec}
+
+% Format de les seccions principals
+\titleformat{\section}
+  {\normalfont\Large\bfseries}
+  {\thesection.}
+  {0.5em}
+  {}
+
+% Format de les subseccions
+\titleformat{\subsection}
+  {\normalfont\large\bfseries}
+  {\thesubsection.}
+  {0.5em}
+  {}
+
+% Format de les subsubseccions
+\titleformat{\subsubsection}
+  {\normalfont\normalsize\bfseries}
+  {\thesubsubsection.}
+  {0.5em}
+  {}
+
+% Espaiats dels títols
+\titlespacing*{\section}{0pt}{18pt}{10pt}
+\titlespacing*{\subsection}{0pt}{12pt}{6pt}
+\titlespacing*{\subsubsection}{0pt}{8pt}{4pt}
+
+% ==================================================
+% 7. CAPÇALERES I PEUS DE PÀGINA
+% ==================================================
+
+% ==================================================
+% CAPÇALERES I PEUS DE PÀGINA
+% ==================================================
+
+\usepackage{fancyhdr}
+
+\pagestyle{fancy}
+\fancyhf{}
+
+% Mostrar el número i el nom de la secció
+\renewcommand{\sectionmark}[1]{%
+    \markboth{\thesection.\ #1}{}
+}
+
+% Capçalera: nom de la secció a l'esquerra
+\fancyhead[L]{\nouppercase{\leftmark}}
+
+% Número de pàgina centrat al peu
+\fancyfoot[C]{\thepage}
+
+% Línies de capçalera i peu
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0pt}
+
+% Configuració de les pàgines plain
+\fancypagestyle{plain}{
+    \fancyhf{}
+    \fancyhead[L]{\nouppercase{\leftmark}}
+    \fancyfoot[C]{\thepage}
+    \renewcommand{\headrulewidth}{0.4pt}
+    \renewcommand{\footrulewidth}{0pt}
+}
+
+% ==================================================
+% 8. GRÀFICS, TAULES I COLORS
+% ==================================================
+\usepackage{graphicx}
+\usepackage[table]{xcolor}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{multirow}
+\usepackage{booktabs}
+\usepackage{makecell}
+\usepackage{float}
+\usepackage[font=small]{caption}
+\usepackage{subcaption}
+
+% Caixes de text
+\usepackage{tcolorbox}
+\tcbuselibrary{most}
+
+% Colors
+\definecolor{grisC}{RGB}{211,211,211}
+\definecolor{grisF}{gray}{0.3}
+
+% ==================================================
+% 9. ENLLAÇOS I REFERÈNCIES
+% ==================================================
+\usepackage[hidelinks]{hyperref}
+\usepackage{bookmark}
+
+\usepackage[autostyle]{csquotes}
+\DeclareQuoteStyle{catalan}
+  {\guillemotleft}{\guillemotright}
+  {\quotesinglbase}{\guillemotright}
+
+\usepackage[
+    backend=biber,
+    style=numeric,
+    sorting=none
+]{biblatex}
+
+% ==================================================
+% 10. ALTRES PAQUETS ÚTILS
+% ==================================================
+\usepackage{varwidth}
+\usepackage{enumitem}
+\usepackage[title,titletoc]{appendix}
+
+% ==================================================
+% 11. CONFIGURACIÓ D'ENTORNS DE TEOREMES
+% ==================================================
+% \theoremstyle{definition}
+% \newtheorem{definicio}{Definició}[section]
+%
+% \theoremstyle{plain}
+% \newtheorem{teorema}{Teorema}[section]
+% \newtheorem{propietat}{Propietat}[section]
+%
+% \theoremstyle{remark}
+% \newtheorem{exemple}{Exemple}[section]
+% \newtheorem{nota}{Nota}[section]
+
+% ==================================================
+% 12. INICI DEL DOCUMENT
+% ==================================================
+\begin{document}
+
+\begin{titlepage}
+    \thispagestyle{empty}
+    \centering
+
+    % Universitat
+    \vspace*{1.5cm}
+
+    {\Large\scshape Universitat Autònoma de Barcelona\par}
+    \vspace{0.3cm}
+    {\large Grau en Física\par}
+
+    % Títol principal
+    \vspace{2.5cm}
+
+    {\color{gray}\rule{1\textwidth}{1.2pt}\par}
+
+    \vspace{0.8cm}
+
+    {\large\bfseries PRÀCTICA 1\par}
+
+    \vspace{0.5cm}
+
+    {\Huge\bfseries Modelització d'una ablació cardíaca IVS\par}
+
+    \vspace{0.6cm}
+
+    {\large INFORME DE PRÀCTIQUES\par}
+
+    \vspace{0.8cm}
+
+    {\color{gray}\rule{1\textwidth}{1.2pt}\par}
+
+    % Dades dels grups
+    \vspace{2cm}
+
+    {\large\bfseries Grup 111\par}
+
+    \vspace{0.8cm}
+
+    {\large Nom i NIU\par}
+    \vspace{0.2cm}
+    {\large Nom i NIU\par}
+    \vspace{0.2cm}
+    {\large Victor Shenyu Lechuga Izquierdo 1753089\par}
+    \vspace{0.2cm}
+    
+
+    % Informació inferior
+    \vfill
+
+    {\large\bfseries Mètodes Numèrics II\par}
+
+    \vspace{0.3cm}
+
+    {\large Curs acadèmic 2026--2027\par}
+
+    \vspace{1cm}
+
+\end{titlepage}
+
+\newpage
+
+\tableofcontents
+
+\newpage
+
+\section{Introducció}
+
+L'ablació cardíaca és un procediment mèdic utilitzat per tractar arrítmies cardíaques mitjançant l'aplicació de calor sobre el 
+teixit responsable de les alteracions elèctriques. En aquesta pràctica s'estudia l'ablació cardíaca interventricular (IVS), 
+basada en l'aplicació d'una diferència de potencial entre dos elèctrodes de polaritat oposada. Aquest procés genera calor per 
+efecte Joule, provocant un augment de la temperatura del teixit i permetent destruir les cèl·lules afectades.
+
+L'objectiu principal és determinar el temps òptim d'aplicació d'una tensió alterna de 40 V $\text{(pi a pic)}$ sobre un teixit 
+cardíac de 2 cm de gruix, amb una regió central de 0.5 cm corresponent al teixit malalt. El tractament ha de garantir que aquesta 
+regió assoleixi temperatures superiors als 50 $^\circ$C, evitant que el teixit sa superi aquest llindar i que cap zona arribi als 80 $^\circ$C, 
+temperatura a partir de la qual es poden produir fenòmens d'evaporació i altres complicacions mèdiques.
+
+Per estudiar l'evolució temporal i espacial de la temperatura, es modelitza la transferència de calor mitjançant l'equació de 
+Fourier en una dimensió, Eq. (\ref{fourier}), incorporant la generació de calor per efecte Joule. La resolució d'aquesta equació permet 
+simular el procés i analitzar-ne l'eficàcia sense posar en risc cap pacient. 
+
+Finalment, es resol el model mitjançant tres mètodes numèrics: Euler explícit, Euler implícit i Crank-Nicolson. Es comparen els 
+resultats obtinguts per als diferents mallats, estudiant-ne l'error numèric, l'estabilitat i la precisió, amb la finalitat de 
+determinar les condicions més adequades per dur a terme el tractament.
+
+\section{Mètodes numèrics}
+
+\subsection{Normalització}
+
+La llei de Fourier per la temperatura és:
+
+\begin{equation}
+    c_v \rho \dfrac{\partial T}{\partial x} = \nabla (\kappa \nabla T) + P_{\text{ext}},
+    \label{fourier}
+\end{equation}
+
+on $c_v$ és el calor específic, $\rho$ és la densitat, $\kappa$ és la conductivitat tèrmica i $P_{\text{ex6}}$ representa totes 
+les fonts de calor externes. Per aquest problema considerarem que l'única font de calor externa és la calor produïda pels 
+elèctrodes que generen calor per efecte Joule.
+
+A continuació definim les variables normalitzades:
+
+\begin{equation}
+    \widetilde{T}=\frac{T}{T_0};\quad \widetilde{x}=\frac{x}{x_0};\quad \widetilde{t}=t/t_0
+    \label{norm}
+\end{equation}
+d'on trobem l'equació:
+\begin{equation*}
+    \frac{\partial \widetilde{T}}{\partial \widetilde{t}} = \frac{\partial^2 \widetilde{T}}{\partial \widetilde{x}^2}  
+    \frac{t_0\kappa}{x_0^2c_v\rho}+\frac{\sigma (\Delta V)^2t_0}{T_0d^2c_v\rho}
+\end{equation*}
+I en particular:
+ \begin{equation}
+     x_0=d \quad t_0=\frac{d^2}{\alpha} \quad T_0=\frac{\sigma (\Delta V)^2}{\kappa}
+\end{equation}
+Ara ja podem normalitzar l'eq (\ref{fourier}). La llei de Fourier normalitzada és:
+
+\begin{equation}
+    \frac{\partial \widetilde{T}}{\partial \widetilde{t}}=\frac{\partial^2 \widetilde{T}}{\partial \widetilde{x}^2} + 1
+\end{equation}
+
+Els valors numèrics emprats en aquesta pràctica són: 
+\begin{equation*}
+    c_v = 3698 \, \frac{\text{J}}{\text{kg \, K}}, \quad \rho = 1081 \, \frac{\text{kg}}{\text{m} ^3}, \quad \kappa = 0.56 \, \frac{\text{W}}{\text{m \, K}}, \quad \sigma = 0.472 \, \frac{\text{S}}{\text{m}}
+\end{equation*}
+\begin{equation*}
+    x_0 = 0.02 \, \text{m}, \quad \approx t_0=2855,384 \, \text{s} \quad T_0 \approx 674.286 \, \text{K}
+\end{equation*}
+
+\subsection{Discretització del sistema}
+
+Per aquest model, considerem un mallat espacial amb un nombre de punts $N$ = 101 i d'amplada $\Delta x = 0.01$ (normalitzat). 
+En el cas del mallat temporal fem servir 3 diferents:
+\begin{equation*}
+    \Delta t = 0.51 (\Delta x)^2 = 5.1 \cdot 10^{-5}, \quad \Delta t = 0.49 (\Delta x)^2 = 4.9 \cdot 10^{-5}, \quad \Delta t = 0.25 (\Delta x)^2 = 2.5 \cdot 10^{-5}
+\end{equation*}
+
+Amb un nombre de punts $N_t$ igual a 490, 510 i 1000 respectivament.
+
+\subsection{Condicions inicials i de contorn}
+
+
+
+\end{document}
