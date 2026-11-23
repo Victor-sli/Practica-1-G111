@@ -216,7 +216,7 @@
 
     {\large Nom i NIU\par}
     \vspace{0.2cm}
-    {\large Nom i NIU\par}
+    {\large Aleix Fosalba Pujols 1709441\par}
     \vspace{0.2cm}
     {\large Victor Shenyu Lechuga Izquierdo 1753089\par}
     \vspace{0.2cm}
@@ -295,6 +295,7 @@ Ara ja podem normalitzar l'eq (\ref{fourier}). La llei de Fourier normalitzada �
 
 \begin{equation}
     \frac{\partial \widetilde{T}}{\partial \widetilde{t}}=\frac{\partial^2 \widetilde{T}}{\partial \widetilde{x}^2} + 1
+    \label{fouriernorm}
 \end{equation}
 
 Els valors numèrics emprats en aquesta pràctica són: 
@@ -336,8 +337,65 @@ la mateixa que la del cos, és a dir, $T_c$.
 
 \subsection{Mètode d'Euler explícit}
 
+A continuació fem servir el mètode d'Euler implícit per aproximar la solució de l'equació de Fourier normalitzada, Eq. (\ref{fouriernorm}). 
+Donat que es tracta d'un mètode implícit, és a dir, que consisteix a calcular el valor següent de la funció a partir del valor actual, 
+partim de l'equació (\ref{fouriernorm}) i fem la derivada temporal per la dreta i la derivada espacial segona centrada:
+
+\begin{equation*}
+    \dfrac{\partial \widetilde{T}}{\partial \widetilde{t}} = \dfrac{T_j^{i+1} - T_j^i}{\Delta t}, \qquad \qquad \dfrac{\partial ^2 \widetilde{T}}{\partial \widetilde{x}^2} = \dfrac{T_{j+1}^i - 2 T_j^i + T_{j-1}^i}{(\Delta x)^2}
+\end{equation*}
+
+Ara, substituïm a l'equació diferencial i aïllem $T_j^{i+1}$, obtenint l'equació de recurrència que hem 
+d'implementar en codi:
+\begin{equation}
+    T_j^{i+1} = \dfrac{\Delta \widetilde{t}}{\Delta \widetilde{x}}(T_{j+1}^i - 2 T_j^i + T_{j-1}^i) + T_j^i + \Delta \widetilde{t}
+\end{equation}
+
+\subsection{Mètode de Crank Nicolson}
+
+
+Per resoldre numèricament l’equació del calor adimensionalitzada s’ha implementat el mètode de Crank-Nicolson en Python. Aquest mètode consisteix a aproximar la derivada temporal mitjançant una diferència finita i la derivada espacial de segon ordre mitjançant la mitjana de les aproximacions als instants temporals actual i posterior.
+
+La discretització de l’equació diferencial dona lloc a un sistema d’equacions lineals que s’ha expressat matricialment. Per resoldre’l a cada pas temporal s’ha utilitzat la factorització LU, implementada mitjançant la llibreria SciPy.
+
+S’han estudiat dos passos temporals diferents, $\Delta t=(\Delta x)^2$ i $\Delta t=0.5(\Delta x)^2$, fins a arribar al temps adimensional (t=0.025).
+
+\section{Anàlisi de resultats}
+
+\subsection{Euler explícit}
+
+
+
+\subsection{Euler implícit}
+
+
+
+\subsection{Crank-Nicolson}
+
+Les solucions numèriques obtingudes amb els dos passos temporals estudiats presenten una gran coincidència amb la solució analítica, tal com s’observa a la primera gràfica.
+
+Respecte a l’error numèric, s’obtenen errors màxims de l’ordre de $(10^{-6})$ en ambdós casos. S’observa que la reducció del pas temporal no comporta una disminució significativa de l’error. Això indica que, per a aquesta discretització, la contribució de l’error espacial és predominant.
+
+Finalment, la distribució de temperatura en graus Celsius mostra que la temperatura màxima al centre del teixit és aproximadament de $53.17\,^\circ\mathrm{C}$, mentre que als extrems es manté a $36.5\,^\circ\mathrm{C}$. Per tant, la temperatura supera els $50\,^\circ\mathrm{C}$ a la regió central, però no arriba als $80\,^\circ\mathrm{C}$ en cap punt del domini.
+
+Aquests resultats indiquen que, en el temps estudiat, s’assoleix el mínim de temperatura necessària per provocar la mort cel·lular sense arribar al límit d’evaporació.
+
+
+\subsection{Comparació de l'error}
+
+
+
+
+
+\section{Resolució del problema}
+
+Utilitzant el mètode d'Euler explícit, hem pogut determinar que el temps que cal aplicar el senyal de 40 V per tal que la regió 
+malalta assoleixi una temperatura entre 50 $^\circ$ C i 80 $^\circ$ C sense que el teixit sa arribi als 50 $^\circ$ C i sense que 
+cap regió sobrepassi els 80 $^\circ$ C és de: $t = 58.34406711000042$ s. 
+
+
+\section{Conclusions}
 
 
 
 \end{document}
-
