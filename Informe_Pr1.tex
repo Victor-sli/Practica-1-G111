@@ -365,11 +365,26 @@ d'implementar en codi Python:
 \subsection{Mètode de Crank Nicolson}
 
 
-Per resoldre numèricament l’equació del calor adimensionalitzada s’ha implementat el mètode de Crank-Nicolson en Python. Aquest mètode consisteix a aproximar la derivada temporal mitjançant una diferència finita i la derivada espacial de segon ordre mitjançant la mitjana de les aproximacions als instants temporals actual i posterior.
+Per resoldre numèricament l’equació del calor adimensionalitzada,
 
-La discretització de l’equació diferencial dona lloc a un sistema d’equacions lineals que s’ha expressat matricialment. Per resoldre’l a cada pas temporal s’ha utilitzat la factorització LU, implementada mitjançant la llibreria SciPy.
+\[\frac{\partial T}{\partial t}=\frac{\partial^2 T}{\partial x^2}+1,\]
 
-S’han estudiat dos passos temporals diferents, $\Delta t=(\Delta x)^2$ i $\Delta t=0.5(\Delta x)^2$, fins a arribar al temps adimensional (t=0.025).
+s’ha implementat el mètode de Crank-Nicolson en Python. Aquest mètode consisteix a aproximar la derivada temporal mitjançant una diferència finita i la derivada espacial de segon ordre mitjançant la mitjana de les aproximacions als instants temporals actual i posterior.
+
+La discretització de l’equació diferencial dona lloc a un sistema d’equacions lineals que s’ha expressat matricialment mitjançant la següent fórmula de recurrència:
+
+\[
+\left(I-\frac{r}{2}A\right)T^{n+1}
+=
+\left(I+\frac{r}{2}A\right)T^n
++\Delta t\,\mathbf{1},
+\]
+
+on \(I\) representa la matriu identitat, \(A\) és la matriu associada a la discretització espacial de la segona derivada, \(T^n\) és el vector de temperatures al pas temporal actual i \(T^{n+1}\) és el vector corresponent al pas temporal següent. A més, \(r=\frac{\Delta t}{(\Delta x)^2}\) i \(\mathbf{1}\) és un vector amb tots els components iguals a 1, que incorpora el terme font de l’equació.
+
+Per resoldre el sistema a cada pas temporal s’ha utilitzat la factorització LU, implementada mitjançant la llibreria SciPy.
+
+Finalment, s’han estudiat dos passos temporals diferents, \(\Delta t=(\Delta x)^2\) i \(\Delta t=0.5(\Delta x)^2\), fins a arribar al temps adimensional \(t=0.025\).
 
 \section{Anàlisi de resultats}
 
@@ -441,13 +456,56 @@ considerem que és tracta d'un error acceptable i, així doncs, es tracta d0uns 
 
 \subsection{Crank-Nicolson}
 
-Les solucions numèriques obtingudes amb els dos passos temporals estudiats presenten una gran coincidència amb la solució analítica, tal com s’observa a la primera gràfica.
+Un cop implementat el mètode de Crank-Nicolson, s'han obtingut les solucions numèriques per a dos passos temporals diferents: \(\Delta t=(\Delta x)^2\) i \(\Delta t=0.5(\Delta x)^2\). En tots dos casos, s'ha calculat la solució fins a arribar al temps adimensional \(t=0.025\). A continuació, es comparen els resultats amb la solució analítica i s'analitza l'error comès.
 
-Respecte a l’error numèric, s’obtenen errors màxims de l’ordre de $(10^{-6})$ en ambdós casos. S’observa que la reducció del pas temporal no comporta una disminució significativa de l’error. Això indica que, per a aquesta discretització, la contribució de l’error espacial és predominant.
+\subsubsection{Comparació entre la solució analítica i la numèrica}
 
-Finalment, la distribució de temperatura en graus Celsius mostra que la temperatura màxima al centre del teixit és aproximadament de $53.17\,^\circ\mathrm{C}$, mentre que als extrems es manté a $36.5\,^\circ\mathrm{C}$. Per tant, la temperatura supera els $50\,^\circ\mathrm{C}$ a la regió central, però no arriba als $80\,^\circ\mathrm{C}$ en cap punt del domini.
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.5\linewidth]{grafica_temperatures.png}
+    \caption{Comparació entre la solució analítica i les dues solucions numèriques obtingudes amb el mètode de Crank-Nicolson.}
+    \label{fig 1}
+\end{figure}
+A la \ref{fig 1} es representen les tres solucions obtingudes. Com es pot observar, les dues aproximacions numèriques pràcticament coincideixen amb la solució analítica, fins al punt que les tres corbes se superposen gairebé completament.
 
-Aquests resultats indiquen que, en el temps estudiat, s’assoleix el mínim de temperatura necessària per provocar la mort cel·lular sense arribar al límit d’evaporació.
+També es pot veure que la temperatura presenta una distribució simètrica respecte del centre del domini, on assoleix el seu valor màxim, i disminueix progressivament fins als extrems. Això ens indica que el mètode de Crank-Nicolson dona resultats molt pròxims a la solució analítica en tots dos casos.
+
+\subsubsection{Anàlisi de l'error numèric}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.5\linewidth]{grafica_errors.png}
+    \caption{Error absolut de les dues solucions numèriques respecte de la solució analítica.}
+    \label{fig 2}
+\end{figure}
+ 
+
+Per comprovar amb més detall la precisió dels resultats, s'ha representat l'error absolut entre les solucions numèriques i l'analítica. A la \ref{fig 2} es pot observar que els errors són molt petits, ja que es mantenen al voltant de l'ordre de \(10^{-6}\).
+
+Per fer una comparació més precisa, també s'han calculat l'error màxim i l'error quadràtic mitjà de cada cas. Per al primer pas temporal, \(\Delta t=(\Delta x)^2\), s'obté un error màxim de \(2.0378\cdot10^{-6}\) i un error quadràtic mitjà de \(1.5557\cdot10^{-6}\). En canvi, per al segon cas, \(\Delta t=0.5(\Delta x)^2\), els valors són lleugerament superiors: \(2.0433\cdot10^{-6}\) i \(1.5583\cdot10^{-6}\), respectivament.
+
+Com es pot veure, reduir el pas temporal a la meitat i duplicar el nombre de passos, passant de 250 a 500, no suposa una millora en la precisió. De fet, el segon cas presenta un error lleugerament més gran, tot i que la diferència entre tots dos és pràcticament insignificant.
+
+Per tant, en aquest cas, el primer pas temporal resulta més convenient, ja que permet obtenir una precisió molt similar amb la meitat de passos temporals i, per tant, amb un menor cost computacional.
+
+\subsubsection{Distribució de temperatura en graus Celsius}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.5\linewidth]{grafica_celsius.png}
+    \caption{Distribució de la temperatura en graus Celsius al temps final de la simulació. Les línies discontínues indiquen els límits de 50 °C i 80 °C.}
+    \label{fig 3}
+\end{figure}
+
+
+Finalment, s'ha representat la temperatura en graus Celsius per poder interpretar millor els resultats des del punt de vista físic. A la \ref{fig 3} es veu com la temperatura augmenta des dels \(36.5\,^\circ\mathrm{C}\) inicials fins a arribar a un màxim aproximat de \(53\,^\circ\mathrm{C}\) al centre del domini. A partir d'aquest punt, la temperatura disminueix progressivament fins a tornar al valor inicial als extrems.
+
+Si comparem la distribució amb els dos llindars indicats a la gràfica, observem que la temperatura supera els \(50\,^\circ\mathrm{C}\) en una regió aproximada entre \(\tilde{x}=0.2\) i \(\tilde{x}=0.8\), però no arriba en cap moment als \(80\,^\circ\mathrm{C}\).
+
+Segons les dimensions del problema, el teixit malalt ocupa els 0.5 cm centrals d'una paret de 2 cm de gruix. Això correspon, en coordenades normalitzades, a la regió \(0.375\leq\tilde{x}\leq0.625\). Per tant, veiem que tota la zona malalta supera els \(50\,^\circ\mathrm{C}\), sense arribar al límit de \(80\,^\circ\mathrm{C}\).
+
+Tot i això, també es pot observar que una part del teixit sa supera els \(50\,^\circ\mathrm{C}\), cosa que no seria desitjable segons els criteris establerts a l'enunciat. Per tant, encara que s'aconsegueix escalfar tota la zona malalta sense superar la temperatura màxima permesa, el tractament també afecta una part del teixit sa.
+
+En general, els resultats obtinguts mostren que el mètode de Crank-Nicolson proporciona una aproximació molt precisa de la solució analítica per als dos passos temporals estudiats. Pel que fa a la interpretació física, la temperatura assolida permet complir els dos primers objectius a la regió malalta, però encara caldria millorar la distribució de calor per evitar que el teixit sa superi els \(50\,^\circ\mathrm{C}\).
 
 
 \subsection{Comparació de l'error}
