@@ -382,7 +382,7 @@ La discretització de l’equació diferencial dona lloc a un sistema d’equaci
 
 on \(I\) representa la matriu identitat, \(A\) és la matriu associada a la discretització espacial de la segona derivada, \(T^n\) és el vector de temperatures al pas temporal actual i \(T^{n+1}\) és el vector corresponent al pas temporal següent. A més, \(r=\frac{\Delta t}{(\Delta x)^2}\) i \(\mathbf{1}\) és un vector amb tots els components iguals a 1, que incorpora el terme font de l’equació.
 
-Per resoldre el sistema a cada pas temporal s’ha utilitzat la factorització LU, implementada mitjançant la llibreria SciPy.
+Per resoldre el sistema a cada pas temporal s’ha utilitzat el mètode de Gauss-Seidel.
 
 Finalment, s’han estudiat dos passos temporals diferents, \(\Delta t=(\Delta x)^2\) i \(\Delta t=0.5(\Delta x)^2\), fins a arribar al temps adimensional \(t=0.025\).
 
