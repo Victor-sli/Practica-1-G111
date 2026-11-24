@@ -365,11 +365,26 @@ d'implementar en codi Python:
 \subsection{Mètode de Crank Nicolson}
 
 
-Per resoldre numèricament l’equació del calor adimensionalitzada s’ha implementat el mètode de Crank-Nicolson en Python. Aquest mètode consisteix a aproximar la derivada temporal mitjançant una diferència finita i la derivada espacial de segon ordre mitjançant la mitjana de les aproximacions als instants temporals actual i posterior.
+Per resoldre numèricament l’equació del calor adimensionalitzada,
 
-La discretització de l’equació diferencial dona lloc a un sistema d’equacions lineals que s’ha expressat matricialment. Per resoldre’l a cada pas temporal s’ha utilitzat la factorització LU, implementada mitjançant la llibreria SciPy.
+\[\frac{\partial T}{\partial t}=\frac{\partial^2 T}{\partial x^2}+1,\]
 
-S’han estudiat dos passos temporals diferents, $\Delta t=(\Delta x)^2$ i $\Delta t=0.5(\Delta x)^2$, fins a arribar al temps adimensional (t=0.025).
+s’ha implementat el mètode de Crank-Nicolson en Python. Aquest mètode consisteix a aproximar la derivada temporal mitjançant una diferència finita i la derivada espacial de segon ordre mitjançant la mitjana de les aproximacions als instants temporals actual i posterior.
+
+La discretització de l’equació diferencial dona lloc a un sistema d’equacions lineals que s’ha expressat matricialment mitjançant la següent fórmula de recurrència:
+
+\[
+\left(I-\frac{r}{2}A\right)T^{n+1}
+=
+\left(I+\frac{r}{2}A\right)T^n
++\Delta t\,\mathbf{1},
+\]
+
+on \(I\) representa la matriu identitat, \(A\) és la matriu associada a la discretització espacial de la segona derivada, \(T^n\) és el vector de temperatures al pas temporal actual i \(T^{n+1}\) és el vector corresponent al pas temporal següent. A més, \(r=\frac{\Delta t}{(\Delta x)^2}\) i \(\mathbf{1}\) és un vector amb tots els components iguals a 1, que incorpora el terme font de l’equació.
+
+Per resoldre el sistema a cada pas temporal s’ha utilitzat la factorització LU, implementada mitjançant la llibreria SciPy.
+
+Finalment, s’han estudiat dos passos temporals diferents, \(\Delta t=(\Delta x)^2\) i \(\Delta t=0.5(\Delta x)^2\), fins a arribar al temps adimensional \(t=0.025\).
 
 \section{Anàlisi de resultats}
 
@@ -441,18 +456,86 @@ considerem que és tracta d'un error acceptable i, així doncs, es tracta d0uns 
 
 \subsection{Crank-Nicolson}
 
-Les solucions numèriques obtingudes amb els dos passos temporals estudiats presenten una gran coincidència amb la solució analítica, tal com s’observa a la primera gràfica.
+Un cop implementat el mètode de Crank-Nicolson, s'han obtingut les solucions numèriques per a dos passos temporals diferents: \(\Delta t=(\Delta x)^2\) i \(\Delta t=0.5(\Delta x)^2\). En tots dos casos, s'ha calculat la solució fins a arribar al temps adimensional \(t=0.025\). A continuació, es comparen els resultats amb la solució analítica i s'analitza l'error comès.
 
-Respecte a l’error numèric, s’obtenen errors màxims de l’ordre de $(10^{-6})$ en ambdós casos. S’observa que la reducció del pas temporal no comporta una disminució significativa de l’error. Això indica que, per a aquesta discretització, la contribució de l’error espacial és predominant.
+\subsubsection{Comparació entre la solució analítica i la numèrica}
 
-Finalment, la distribució de temperatura en graus Celsius mostra que la temperatura màxima al centre del teixit és aproximadament de $53.17\,^\circ\mathrm{C}$, mentre que als extrems es manté a $36.5\,^\circ\mathrm{C}$. Per tant, la temperatura supera els $50\,^\circ\mathrm{C}$ a la regió central, però no arriba als $80\,^\circ\mathrm{C}$ en cap punt del domini.
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.5\linewidth]{grafica_temperatures.png}
+    \caption{Comparació entre la solució analítica i les dues solucions numèriques obtingudes amb el mètode de Crank-Nicolson.}
+    \label{fig 1}
+\end{figure}
+A la \ref{fig 1} es representen les tres solucions obtingudes. Com es pot observar, les dues aproximacions numèriques pràcticament coincideixen amb la solució analítica, fins al punt que les tres corbes se superposen gairebé completament.
 
-Aquests resultats indiquen que, en el temps estudiat, s’assoleix el mínim de temperatura necessària per provocar la mort cel·lular sense arribar al límit d’evaporació.
+També es pot veure que la temperatura presenta una distribució simètrica respecte del centre del domini, on assoleix el seu valor màxim, i disminueix progressivament fins als extrems. Això ens indica que el mètode de Crank-Nicolson dona resultats molt pròxims a la solució analítica en tots dos casos.
+
+\subsubsection{Anàlisi de l'error numèric}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.5\linewidth]{grafica_errors.png}
+    \caption{Error absolut de les dues solucions numèriques respecte de la solució analítica.}
+    \label{fig 2}
+\end{figure}
+ 
+
+Per comprovar amb més detall la precisió dels resultats, s'ha representat l'error absolut entre les solucions numèriques i l'analítica. A la \ref{fig 2} es pot observar que els errors són molt petits, ja que es mantenen al voltant de l'ordre de \(10^{-6}\).
+
+Per fer una comparació més precisa, també s'han calculat l'error màxim i l'error quadràtic mitjà de cada cas. Per al primer pas temporal, \(\Delta t=(\Delta x)^2\), s'obté un error màxim de \(2.0378\cdot10^{-6}\) i un error quadràtic mitjà de \(1.5557\cdot10^{-6}\). En canvi, per al segon cas, \(\Delta t=0.5(\Delta x)^2\), els valors són lleugerament superiors: \(2.0433\cdot10^{-6}\) i \(1.5583\cdot10^{-6}\), respectivament.
+
+Com es pot veure, reduir el pas temporal a la meitat i duplicar el nombre de passos, passant de 250 a 500, no suposa una millora en la precisió. De fet, el segon cas presenta un error lleugerament més gran, tot i que la diferència entre tots dos és pràcticament insignificant.
+
+Per tant, en aquest cas, el primer pas temporal resulta més convenient, ja que permet obtenir una precisió molt similar amb la meitat de passos temporals i, per tant, amb un menor cost computacional.
+
+\subsubsection{Distribució de temperatura en graus Celsius}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.5\linewidth]{grafica_celsius.png}
+    \caption{Distribució de la temperatura en graus Celsius al temps final de la simulació. Les línies discontínues indiquen els límits de 50 °C i 80 °C.}
+    \label{fig 3}
+\end{figure}
 
 
-\subsection{Comparació de l'error}
+Finalment, s'ha representat la temperatura en graus Celsius per poder interpretar millor els resultats des del punt de vista físic. A la \ref{fig 3} es veu com la temperatura augmenta des dels \(36.5\,^\circ\mathrm{C}\) inicials fins a arribar a un màxim aproximat de \(53\,^\circ\mathrm{C}\) al centre del domini. A partir d'aquest punt, la temperatura disminueix progressivament fins a tornar al valor inicial als extrems.
+
+Si comparem la distribució amb els dos llindars indicats a la gràfica, observem que la temperatura supera els \(50\,^\circ\mathrm{C}\) en una regió aproximada entre \(\tilde{x}=0.2\) i \(\tilde{x}=0.8\), però no arriba en cap moment als \(80\,^\circ\mathrm{C}\).
+
+Segons les dimensions del problema, el teixit malalt ocupa els 0.5 cm centrals d'una paret de 2 cm de gruix. Això correspon, en coordenades normalitzades, a la regió \(0.375\leq\tilde{x}\leq0.625\). Per tant, veiem que tota la zona malalta supera els \(50\,^\circ\mathrm{C}\), sense arribar al límit de \(80\,^\circ\mathrm{C}\).
+
+Tot i això, també es pot observar que una part del teixit sa supera els \(50\,^\circ\mathrm{C}\), cosa que no seria desitjable segons els criteris establerts a l'enunciat. Per tant, encara que s'aconsegueix escalfar tota la zona malalta sense superar la temperatura màxima permesa, el tractament també afecta una part del teixit sa.
+
+En general, els resultats obtinguts mostren que el mètode de Crank-Nicolson proporciona una aproximació molt precisa de la solució analítica per als dos passos temporals estudiats. Pel que fa a la interpretació física, la temperatura assolida permet complir els dos primers objectius a la regió malalta, però encara caldria millorar la distribució de calor per evitar que el teixit sa superi els \(50\,^\circ\mathrm{C}\).
 
 
+\subsection{Comparació dels mètodes d'Euler explícit, Euler implícit i Crank-Nicolson}
+ 
+Un cop estudiats els tres mètodes numèrics, podem comparar-ne el comportament i la precisió a partir dels resultats obtinguts. Tot i que tots tres permeten resoldre l'equació del calor, presenten diferències importants pel que fa a l'estabilitat, el nombre de passos necessaris i l'error numèric.
+
+En primer lloc, el mètode d'Euler explícit és el més senzill d'implementar, ja que permet calcular directament la temperatura al pas següent a partir dels valors coneguts. Tanmateix, té una limitació important d'estabilitat: en el nostre cas, quan s'utilitza un pas temporal de \(\Delta t=0.51(\Delta x)^2\), la solució es torna inestable i apareixen oscil·lacions que donen lloc a temperatures físicament incoherents. En canvi, amb els passos temporals \(0.49(\Delta x)^2\) i \(0.25(\Delta x)^2\), els resultats són estables i s'aproximen molt bé a la solució analítica. A més, es pot observar que reduir el pas temporal millora la precisió, tot i que implica augmentar el nombre de passos de 510 a 1000.
+
+Pel que fa al mètode d'Euler implícit, no presenta la mateixa restricció d'estabilitat que el mètode explícit, fet que permet treballar amb passos temporals més grans. En aquest cas, el sistema d'equacions resultant s'ha resolt mitjançant el mètode iteratiu de Gauss-Seidel. Els resultats mostren que, en reduir el pas temporal a la meitat, l'error màxim disminueix de \(1.43\cdot10^{-5}\) a \(8.18\cdot10^{-6}\). Per tant, s'observa una millora de la precisió, encara que cal tenir en compte el cost computacional associat a les iteracions necessàries per resoldre cada pas temporal.
+
+Finalment, el mètode de Crank-Nicolson presenta els millors resultats en comparació amb el mètode d'Euler implícit per als mateixos passos temporals. Aquest mètode utilitza una aproximació de la derivada espacial que té en compte tant l'instant actual com el posterior, i resol el sistema lineal mitjançant una factorització LU. Els errors obtinguts són de l'ordre de \(10^{-6}\) en tots dos casos, i les solucions pràcticament coincideixen amb la solució analítica. A més, reduir el pas temporal a la meitat no proporciona una millora apreciable de la precisió.
+
+Per comparar quantitativament els tres mètodes, podem resumir els errors màxims obtinguts a la taula següent:
+
+\[
+\begin{array}{c|c|c}
+\text{Mètode} & \Delta t/(\Delta x)^2 & \text{Error màxim}\\
+\hline
+\text{Euler explícit} & 0.49 & 3.98\cdot10^{-6}\\
+\text{Euler explícit} & 0.25 & 1.04\cdot10^{-6}\\
+\text{Euler implícit} & 1.00 & 1.43\cdot10^{-5}\\
+\text{Euler implícit} & 0.50 & 8.18\cdot10^{-6}\\
+\text{Crank-Nicolson} & 1.00 & 2.04\cdot10^{-6}\\
+\text{Crank-Nicolson} & 0.50 & 2.04\cdot10^{-6}
+\end{array}
+\]
+
+A partir d'aquests resultats, podem veure que Crank-Nicolson ofereix una bona combinació de precisió i nombre de passos temporals. En particular, per a un pas temporal de l'ordre de \(0.5(\Delta x)^2\), presenta un error inferior al dels altres dos mètodes estudiats amb passos temporals equivalents. Tot i que Euler explícit també pot aconseguir errors molt petits si es redueix prou el pas temporal, això implica augmentar considerablement el nombre de càlculs i respectar sempre la seva condició d'estabilitat.
+
+En definitiva, els tres mètodes permeten obtenir solucions vàlides si s'escullen adequadament els paràmetres de discretització, però Crank-Nicolson destaca per la seva precisió i pel bon comportament amb els passos temporals considerats.
 
 
 
@@ -486,6 +569,13 @@ dels teixits.
 
 \section{Conclusions}
 
+En aquesta pràctica hem estudiat com evoluciona la temperatura en un model simplificat d'ablació cardíaca IVS, resolent l'equació del calor tant analíticament com numèricament. Per fer-ho, hem implementat tres mètodes diferents: Euler explícit, Euler implícit i Crank-Nicolson, i hem comparat els resultats obtinguts amb la solució analítica.
+
+A partir dels resultats, hem pogut veure que no tots els mètodes es comporten de la mateixa manera. Euler explícit és el més senzill d'implementar, però té limitacions pel que fa a l'estabilitat i obliga a utilitzar passos temporals prou petits. En canvi, Euler implícit permet treballar amb passos més grans, tot i que necessita resoldre un sistema d'equacions a cada iteració. Crank-Nicolson, per la seva banda, ha donat els resultats més precisos en les simulacions realitzades, amb errors molt petits respecte de la solució analítica i sense necessitat d'augmentar excessivament el nombre de passos temporals.
+
+Pel que fa al problema físic, hem observat que la temperatura aconsegueix superar els \(50\,^\circ\mathrm{C}\) a tota la regió del teixit malalt, sense arribar als \(80\,^\circ\mathrm{C}\). Tot i això, també s'escalfa una part del teixit sa per sobre dels \(50\,^\circ\mathrm{C}\), de manera que el tractament encara no compleix completament tots els objectius plantejats inicialment.
+
+En general, aquesta pràctica ens ha permès entendre millor com es poden resoldre numèricament les equacions diferencials en derivades parcials i veure la importància que tenen tant el mètode escollit com el pas temporal. També hem pogut comprovar que obtenir una solució numèrica precisa no és suficient per garantir que el model compleixi els objectius físics del problema.
 
 \newpage
 
