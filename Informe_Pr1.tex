@@ -510,33 +510,17 @@ En general, els resultats obtinguts mostren que el mètode de Crank-Nicolson pro
 
 \subsection{Comparació dels mètodes d'Euler explícit, Euler implícit i Crank-Nicolson}
  
-Un cop estudiats els tres mètodes numèrics, podem comparar-ne el comportament i la precisió a partir dels resultats obtinguts. Tot i que tots tres permeten resoldre l'equació del calor, presenten diferències importants pel que fa a l'estabilitat, el nombre de passos necessaris i l'error numèric.
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.7\linewidth]{comparacio_error.png}
+    \caption{Comparació dels errors dels mètodes d'Euler explícit, implícit i Crank-Nicolson}
+    \label{comparacio}
+\end{figure}
 
-En primer lloc, el mètode d'Euler explícit és el més senzill d'implementar, ja que permet calcular directament la temperatura al pas següent a partir dels valors coneguts. Tanmateix, té una limitació important d'estabilitat: en el nostre cas, quan s'utilitza un pas temporal de \(\Delta t=0.51(\Delta x)^2\), la solució es torna inestable i apareixen oscil·lacions que donen lloc a temperatures físicament incoherents. En canvi, amb els passos temporals \(0.49(\Delta x)^2\) i \(0.25(\Delta x)^2\), els resultats són estables i s'aproximen molt bé a la solució analítica. A més, es pot observar que reduir el pas temporal millora la precisió, tot i que implica augmentar el nombre de passos de 510 a 1000.
-
-Pel que fa al mètode d'Euler implícit, no presenta la mateixa restricció d'estabilitat que el mètode explícit, fet que permet treballar amb passos temporals més grans. En aquest cas, el sistema d'equacions resultant s'ha resolt mitjançant el mètode iteratiu de Gauss-Seidel. Els resultats mostren que, en reduir el pas temporal a la meitat, l'error màxim disminueix de \(1.43\cdot10^{-5}\) a \(8.18\cdot10^{-6}\). Per tant, s'observa una millora de la precisió, encara que cal tenir en compte el cost computacional associat a les iteracions necessàries per resoldre cada pas temporal.
-
-Finalment, el mètode de Crank-Nicolson presenta els millors resultats en comparació amb el mètode d'Euler implícit per als mateixos passos temporals. Aquest mètode utilitza una aproximació de la derivada espacial que té en compte tant l'instant actual com el posterior, i resol el sistema lineal mitjançant una factorització LU. Els errors obtinguts són de l'ordre de \(10^{-6}\) en tots dos casos, i les solucions pràcticament coincideixen amb la solució analítica. A més, reduir el pas temporal a la meitat no proporciona una millora apreciable de la precisió.
-
-Per comparar quantitativament els tres mètodes, podem resumir els errors màxims obtinguts a la taula següent:
-
-\[
-\begin{array}{c|c|c}
-\text{Mètode} & \Delta t/(\Delta x)^2 & \text{Error màxim}\\
-\hline
-\text{Euler explícit} & 0.49 & 3.98\cdot10^{-6}\\
-\text{Euler explícit} & 0.25 & 1.04\cdot10^{-6}\\
-\text{Euler implícit} & 1.00 & 1.43\cdot10^{-5}\\
-\text{Euler implícit} & 0.50 & 8.18\cdot10^{-6}\\
-\text{Crank-Nicolson} & 1.00 & 2.04\cdot10^{-6}\\
-\text{Crank-Nicolson} & 0.50 & 2.04\cdot10^{-6}
-\end{array}
-\]
-
-A partir d'aquests resultats, podem veure que Crank-Nicolson ofereix una bona combinació de precisió i nombre de passos temporals. En particular, per a un pas temporal de l'ordre de \(0.5(\Delta x)^2\), presenta un error inferior al dels altres dos mètodes estudiats amb passos temporals equivalents. Tot i que Euler explícit també pot aconseguir errors molt petits si es redueix prou el pas temporal, això implica augmentar considerablement el nombre de càlculs i respectar sempre la seva condició d'estabilitat.
-
-En definitiva, els tres mètodes permeten obtenir solucions vàlides si s'escullen adequadament els paràmetres de discretització, però Crank-Nicolson destaca per la seva precisió i pel bon comportament amb els passos temporals considerats.
-
+Segons la gràfica de la figura \ref{comparacio}, observem que el mètode d'Euler explícit amb $a=0.25$ és el que ofereix un menor 
+error numèric. Això es deu al fet que utilitza un pas temporal més petit que els altres mètodes i, per tant, redueix l'error de 
+discretització temporal i permet obtenir una aproximació més precisa de la solució analítica. Per tant, tot i que els mètodes 
+implícits són estables, en aquest cas l'Euler explícit amb $a=0.25$ proporciona els resultats més precisos.
 
 
 \section{Resolució del problema}
