@@ -292,12 +292,21 @@ I en particular:
      x_0=d \quad t_0=\frac{d^2}{\alpha} \quad T_0=\frac{\sigma (\Delta V)^2}{\kappa}
 \end{equation}
 
-Ara ja podem normalitzar l'equació (\ref{fourier}). La llei de Fourier normalitzada és:
+Ara ja podem renormalitzar l'equació (\ref{fourier}). La llei de Fourier normalitzada és:
 
 \begin{equation}
     \frac{\partial \widetilde{T}}{\partial \widetilde{t}}=\frac{\partial^2 \widetilde{T}}{\partial \widetilde{x}^2} + 1
     \label{fouriernorm}
 \end{equation}
+
+La renormalització ens ha permès reduir el nombre de paràmetres del problema expressant les variables en forma adimensional. Això 
+simplifica l'equació diferencial, facilita els càlculs numèrics i permet comparar diferents sistemes físics independentment de 
+les seves unitats de mesura.
+
+La difusivitat tèrmica, definida com $\alpha=\frac{\kappa}{c_v\rho}$, determina la rapidesa amb què la calor es propaga a través 
+del teixit. Depèn de la conductivitat tèrmica, la calor específica i la densitat del material. Com més gran és la difusivitat, 
+més ràpidament es transmeten les variacions de temperatura. En el nostre sistema, determina l'escala temporal característica del 
+procés de difusió tèrmica i, per tant, influeix directament en la durada del tractament.
 
 Els valors numèrics emprats en aquesta pràctica són: 
 \begin{equation*}
@@ -366,6 +375,64 @@ S’han estudiat dos passos temporals diferents, $\Delta t=(\Delta x)^2$ i $\Del
 
 \subsection{Euler explícit}
 
+\begin{figure}[h]
+    \centering
+
+    \begin{minipage}{0.47\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{inestable.png}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.47\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{estable.png}
+    \end{minipage}
+
+    \caption{Representació gràfica de la temperatura en funció de l'espai. La figura de l'esquerra mostra els tres mallats 
+    temporals mentre que la figura de la dreta suprimeix el mallat per a $a = 0.51$, per facilitar l'observació de la 
+    representació dels altres dos mallats temporals.}
+    \label{figura1}
+
+\end{figure}
+
+
+A la figura \ref{figura1} es pot observar que els resultats obtinguts amb els passos temporals 
+$\Delta \widetilde{t} = 0.49(\Delta \widetilde{x})^2$ i $\Delta \widetilde{t} = 0.25(\Delta \widetilde{x})^2$ són tan 
+semblants entre si que se superposen. En canvi, quan s'utilitza $\Delta \widetilde{t} = 0.51(\Delta \widetilde{x})^2$, la solució presenta un 
+oscil·latori, el que ens indica un comportament inestable i físicament incoherent, amb temperatures que fins i tot arriben a 
+valors inferiors a $0\,\mathrm{K}$.
+
+Aquesta diferència s'explica per l'estabilitat del mètode d'Euler explícit, que depèn del mallat emprat. En concret, 
+pel nostre cas cal que el pas temporal compleixi la condició $\Delta \widetilde{t} \leq 0.5(\Delta \widetilde{x})^2$. 
+Per tant, els dos primers mallats compleixen aquesta condició i proporcionen resultats estables, mentre que el tercer la supera 
+i provoca la divergència de la solució numèrica.
+
+\begin{figure}[h]
+    \centering
+
+    \begin{minipage}{0.47\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{numerica_analitica.png}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.47\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{errores.png}
+    \end{minipage}
+
+    \caption{A la figura de la dreta podem apreciar la comparació entre la solució analítica i la solució numèrica pels mallats 
+    temporals amb $a$ igual a 0.49 i 0.25. A la figura de la dreta podem veure els errors numèrics d'aquests dos mallats en comparar-los 
+    amb la solució analítica.}
+    \label{figura2}
+
+\end{figure}
+
+Ara, avaluem l'error. A  la figura \ref{figura2} podem apreciar que les solucions per 
+$\Delta \widetilde{t} = 0.49(\Delta \widetilde{x})^2$ i $\Delta \widetilde{t} = 0.25(\Delta \widetilde{x})^2$ són molt properes entre sí i properes amb la solució analítica, 
+ tal i com demostra l'ordre de magnitud de l'error. També podem observar que, tal i com és d'esperar, quan disminuïm l'amplada del 
+mallat i augmentem el nombre de punts, l'error disminueix. Donat que hem obtingut una diferència de temperatura 
+$\Delta T < 0.003$ respecte la solució analítica, i recordant que estem treballant amb temperatures al voltant dels 50 $^\circ$C 
+considerem que és tracta d'un error acceptable i, així doncs, es tracta d0uns resultats numèrics força precisos.
 
 
 \subsection{Euler implícit}
@@ -395,9 +462,48 @@ Utilitzant el mètode d'Euler explícit, hem pogut determinar que el temps que c
 malalta assoleixi una temperatura entre 50 $^\circ$C i 80 $^\circ$C sense que el teixit sa arribi als 50 $^\circ$C i sense que 
 cap regió sobrepassi els 80 $^\circ$C és de: $t = 58.34406711000042$ s. 
 
+\section{Propostes per millorar el model}
+
+Es podria millorar el model de la potència externa $P_{\mathrm{ext}}$ considerant els efectes de vorada dels elèctrodes, 
+ja que en el model actual es considera una distribució idealitzada i uniforme de la potència. En realitat, la potència dissipada 
+per efecte Joule pot variar espacialment a causa de la geometria finita dels elèctrodes.
+
+Per tenir en compte aquest efecte, es podria ampliar el model a dues dimensions i considerar una diferència de potencial 
+efectiva dependent de la posició, $\Delta V(x,y)$. Això permetria definir una potència externa variable espacialment, 
+$P_{\mathrm{ext}}(x,y)$, i incorporar-la a l'equació de la calor:
+
+\[
+c_v\rho\frac{\partial T}{\partial t}
+= \kappa\left(\frac{\partial^2 T}{\partial x^2} + \frac{\partial^2 T}{\partial y^2}\right) + P_{\mathrm{ext}}(x,y)
+\]
+
+Així, es podria representar de manera més realista la distribució de calor dins del teixit, incloent-hi les variacions de 
+potència causades pels efectes de vora.
+
+Altres propostes més complexes podrien ser considerar la pèrdua de calor produïda per la circulació de sang i pel contacte amb 
+altres teixits i òrgans, o que la calor produïda per efecte Joule pugui variar amb el temps depenent de les propietats elèctriques 
+dels teixits.
 
 \section{Conclusions}
 
 
+\newpage
+
+\section{Contribucions i ús d'IA}
+
+\subsection{Contribucions}
+
+Per elaborar aquesta pràctica ens hem dividit la feina per tal de
+
+
+\subsection{Ús d'IA}
+
+
+
+
+
+\newpage
+
+\section{Annex}
 
 \end{document}
