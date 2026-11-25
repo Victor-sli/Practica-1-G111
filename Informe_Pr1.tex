@@ -306,7 +306,7 @@ del teixit. Depèn de la conductivitat tèrmica, la calor específica i la densi
 més ràpidament es transmeten les variacions de temperatura. En el nostre sistema, determina l'escala temporal característica del 
 procés de difusió tèrmica i, per tant, influeix directament en la durada del tractament.
 
-Els valors numèrics emprats en aquesta pràctica són: 
+Els valors numèrics emprats en aquesta pràctica són els següents: 
 \begin{equation*}
     c_v = 3698 \ \frac{\text{J}}{\text{kg \ K}}, \quad \rho = 1081 \ \frac{\text{kg}}{\text{m} ^3}, \quad \kappa = 0.56 \ \frac{\text{W}}{\text{m \ K}}, \quad \sigma = 0.472 \ \frac{\text{S}}{\text{m}}
 \end{equation*}
@@ -382,16 +382,16 @@ on $\gamma = \frac{\Delta\tilde{t}}{\left(\Delta\tilde{x}\right)^2}$.
 A partir d'aquesta, utilitzant el mètode de Gauss-Seidel trobem la següent relació pel desenvolupament dels càlculs iteratius:
 
 \begin{equation}
-    T_i^{k+1} = \frac{b_i^n + \gamma \left(T_{i-1}^{k+1} + T_{i+1}^k\right)}{1 + 2\gamma}, \quad on \; b_i^n = T_i^n + \Delta\tilde{t}.
+    T_i^{k+1} = \frac{b_i^n + \gamma \left(T_{i-1}^{k+1} + T_{i+1}^k\right)}{1 + 2\gamma}, \quad \text{on} \; b_i^n = T_i^n + \Delta\tilde{t}.
 \end{equation}
 
 En aquesta pràctica es van explorar els casos $\Delta\tilde{t} = \left(\Delta\tilde{x}\right)^2 \; i \; \Delta\tilde{t} = 0.5 \left(\Delta\tilde{x}\right)^2$.
 
 
 
-\subsection{Mètode de Crank Nicolson}
+\subsection{Mètode de Crank-Nicolson}
 
-Per resoldre numèricament l’equació del calor adimensionalitzada, l'equació (\ref{fouriernorm}), s’ha implementat el mètode de 
+Per resoldre numèricament l’equació de la calor adimensional, l'equació (\ref{fouriernorm}), s’ha implementat el mètode de 
 Crank-Nicolson en Python. Aquest mètode consisteix a aproximar la derivada temporal mitjançant una diferència finita i la 
 derivada espacial de segon ordre mitjançant la mitjana de les aproximacions als instants temporals actual i posterior.
 
@@ -442,8 +442,8 @@ arribar al temps adimensional \(t=0.025\).
 
 A la figura \ref{figura1} es pot observar que els resultats obtinguts amb els passos temporals 
 $\Delta \widetilde{t} = 0.49(\Delta \widetilde{x})^2$ i $\Delta \widetilde{t} = 0.25(\Delta \widetilde{x})^2$ són tan 
-semblants entre si que se superposen. En canvi, quan s'utilitza $\Delta \widetilde{t} = 0.51(\Delta \widetilde{x})^2$, la solució presenta un 
-oscil·latori, el que ens indica un comportament inestable i físicament incoherent, amb temperatures que fins i tot arriben a 
+propers entre si que presenten una superposició visual. En canvi, quan s'utilitza $\Delta \widetilde{t} = 0.51(\Delta \widetilde{x})^2$, la solució presenta un 
+comportament oscil·latori, el que ens indica un comportament inestable i físicament incoherent, amb temperatures que fins i tot arriben a 
 valors inferiors a $0\,\mathrm{K}$.
 
 Aquesta diferència s'explica per l'estabilitat del mètode d'Euler explícit, que depèn del mallat emprat. En concret, 
@@ -472,13 +472,13 @@ i provoca la divergència de la solució numèrica.
 \end{figure}
 
 Ara, avaluem l'error. A  la figura \ref{figura2} podem apreciar que les solucions per 
-$\Delta \widetilde{t} = 0.49(\Delta \widetilde{x})^2$ i $\Delta \widetilde{t} = 0.25(\Delta \widetilde{x})^2$ són molt properes entre sí i properes amb la solució analítica, 
- tal i com demostra l'ordre de magnitud de l'error. També podem observar que, tal i com és d'esperar, quan disminuïm l'amplada del 
-mallat i augmentem el nombre de punts, l'error disminueix. Donat que hem obtingut una diferència de temperatura 
+$\Delta \widetilde{t} = 0.49(\Delta \widetilde{x})^2$ i $\Delta \widetilde{t} = 0.25(\Delta \widetilde{x})^2$ són molt properes entre si i properes amb la solució analítica, 
+tal i com demostra l'ordre de magnitud de l'error. També podem observar que, tal com és d'esperar, quan disminuïm l'amplada del 
+mallat i augmentem el nombre de punts, l'error disminueix. Donat que hem obtingut una diferència màxima de temperatura 
 $\Delta T < 0.003$ respecte la solució analítica, i recordant que estem treballant amb temperatures al voltant dels 50 $^\circ$C 
-considerem que és tracta d'un error acceptable i, així doncs, es tracta d'uns resultats numèrics força precisos.
+considerem que es tracta d'un error acceptable i, així doncs, d'uns resultats numèrics força precisos.
 
-En cas de que no coneixessim la solució analítica, podríem comprovar que el programa va bé modificant el mallat temporal. Si 
+En cas de no conèixer la solució analítica, podríem comprovar que el programa va bé modificant el mallat temporal. Si 
 el programa funciona correctament hauria de convergir cap a una solució en disminuir l'amplada del mallat temporal i, en 
 conseqüència, augmentant el nombre de punts. 
 
@@ -617,7 +617,7 @@ En aquesta pràctica hem modelitzat la transferència de calor durant una ablaci
 hem simplificat l'estudi amb una normalització. Hem implementat tres mètodes numèrics: Euler explícit, Euler implícit i 
 Crank-Nicolson; i hem comparat l'estabilitat i la precisió amb la solució analítica.
 
-Els resultats mostren que l'Euler explícit només és estable per determinats mallats temporals (el cas $\Delta t = 0.51(\Delta x)^2$ és inestable), 
+Els resultats mostren que l'Euler explícit només és estable per determinats mallats temporals (el criteri d'estabilitat és $\Delta \widetilde{t} = 0.51(\Delta \widetilde{x})^2$), 
 mentre que els mètodes implícits no presenten aquesta restricció. En general, els tres mètodes ofereixen resultats precisos, amb 
 errors numèrics petits, tot i que cal destacar que el mètode d'Euler explícit ha sigut el que ha proporcionat un error menor. 
 Per aquest motiu, hem estimat amb aquest mètode un temps de tractament d'aproximadament \(58.34\,\mathrm{s}\) per assolir les 
@@ -646,16 +646,16 @@ l'Euler implícit i l'Aleix s'ha encarregat de les parts corresponents al Crank-
 \subsection{Ús d'IA}
 
 Hem utilitzat ChatGPT com a eina de suport durant el desenvolupament de la pràctica, principalment per 
-recerca bibliogràfica per resoldre dubtes sobre els mètodes numèrics, revisió de l'ortografia i per ajudar a detectar errors 
+recerca bibliogràfica per resoldre dubtes sobre els mètodes numèrics, revisió ortogràfica i per assistir en la detecció d'errors 
 de compilació en els codis, principalment el LaTex. També per consultar ràpidament com representar algun símbol a LaTex quan no 
 recordàvem o no sabíem quina era la seva comanda.
 
-Els codis, els resultats obtinguts i la seva interpretació han estat elaborats pels membres del grup, que són responsables del 
+Els codis, els resultats obtinguts i la seva interpretació han estat elaborats íntegrament pels membres del grup, que són responsables del 
 contingut final del treball. 
 
 Considerem que la IA ha sigut una eina de suport que ha servit per agilitzar el desenvolupament de la pràctica, donat que en 
 alguns casos no érem capaços d'identificar quin era el motiu pel qual el document de l'informe no compilava o per trobar símbols. 
-Tot i això, considerem que sense cap eina d'IA seríem capaços de realitzar d'igual forma aquesta pràctica, llevat que seria un 
+Tot i això, considerem que sense cap eina d'IA seríem capaços de realitzar d'igual forma aquesta pràctica, malgrat que seria un 
 procés més lent.
 
 
@@ -664,9 +664,16 @@ procés més lent.
 
 \newpage
 
+\section{Referències}
+\textsc{escartín, j. m., \& navau, c.} (2026),
+\textit{Mètodes numèrics II: Apunts de l'assignatura. Teoria} (versió 2.1.0). Universitat Autònoma de Barcelona
+\\
+\\
+\textit{Enunciat pràctica 1: Modelització del tractament d'ablació cardíaca IVS} (2026). Universitat Autònoma de Barcelona
+
 \section{Annex}
-Els codis que hem fet servir en aquesta pràctica es troben en un repositori públic de GitHub. Aquí hi ha un enllaç al repositori:
-\color{blue} \href{https://github.com/Victor-sli/Codis-practica1-Grup-G111}{Codis Grup G111}. \color{black}
+Els codis que hem fet servir per elaborar aquesta pràctica es troben en un repositori públic de GitHub. Aquí hi ha un enllaç 
+al repositori: \color{blue} \href{https://github.com/Victor-sli/Codis-practica1-Grup-G111}{Codis Grup G111}. \color{black}
 
 
 
