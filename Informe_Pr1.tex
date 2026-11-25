@@ -2,7 +2,7 @@
 % ==================================================
 % 1. CLASSE DEL DOCUMENT
 % ==================================================
-\documentclass[a4paper,12pt,oneside]{article}
+\documentclass[a4paper,11pt,oneside]{article}
 
 % ==================================================
 % 2. PAQUETS ESSENCIALS (IDIOMA I CODIFICACIÓ)
@@ -218,7 +218,7 @@
     \vspace{0.2cm}
     {\large Aleix Fosalba Pujols 1709441\par}
     \vspace{0.2cm}
-    {\large Victor Shenyu Lechuga Izquierdo 1753089\par}
+    {\large Víctor Shenyu Lechuga Izquierdo 1753089\par}
     \vspace{0.2cm}
     
 
@@ -243,23 +243,21 @@
 
 \section{Introducció}
 
-L'ablació cardíaca és un procediment mèdic utilitzat per tractar arrítmies cardíaques mitjançant l'aplicació de calor sobre el 
-teixit responsable de les alteracions elèctriques. En aquesta pràctica s'estudia l'ablació cardíaca interventricular (IVS), 
-basada en l'aplicació d'una diferència de potencial entre dos elèctrodes de polaritat oposada. Aquest procés genera calor per 
-efecte Joule, provocant un augment de la temperatura del teixit i permetent destruir les cèl·lules afectades.
+L'ablació cardíaca és un procediment mèdic utilitzat per tractar arrítmies cardíaques mitjançant l'aplicació de calor. En 
+aquesta pràctica s'estudia l'ablació cardíaca interventricular (IVS), basada en l'aplicació d'una diferència de potencial entre 
+dos elèctrodes de polaritat oposada. Aquest procés genera calor per efecte Joule, augmentant la temperatura i destruint el 
+teixit malalt.
 
 L'objectiu principal és determinar el temps òptim d'aplicació d'una tensió alterna de 40 V $\text{(pi a pic)}$ sobre un teixit 
 cardíac de 2 cm de gruix, amb una regió central de 0.5 cm corresponent al teixit malalt. El tractament ha de garantir que aquesta 
 regió assoleixi temperatures superiors als 50 $^\circ$C, evitant que el teixit sa superi aquest llindar i que cap zona arribi als 80 $^\circ$C, 
-temperatura a partir de la qual es poden produir fenòmens d'evaporació i altres complicacions mèdiques.
+per evitar complicacions mèdiques.
 
 Per estudiar l'evolució temporal i espacial de la temperatura, es modelitza la transferència de calor mitjançant l'equació de 
-Fourier en una dimensió, Eq. (\ref{fourier}), incorporant la generació de calor per efecte Joule. La resolució d'aquesta equació permet 
-simular el procés i analitzar-ne l'eficàcia sense haver de realitzar la intervenció. 
-
-Finalment, es resol el model mitjançant tres mètodes numèrics: Euler explícit, Euler implícit i Crank-Nicolson. Es comparen els 
-resultats obtinguts per als diferents mallats, estudiant-ne l'error numèric, l'estabilitat i la precisió, amb la finalitat de 
-determinar les condicions més adequades per dur a terme el tractament.
+Fourier en una dimensió, incorporant la generació de calor per efecte Joule. Es resol el model mitjançant tres mètodes numèrics: 
+Euler explícit, Euler implícit i Crank-Nicolson. Es comparen els resultats obtinguts per als diferents mallats, estudiant-ne 
+l'error numèric, l'estabilitat i la precisió, amb la finalitat de determinar les condicions més adequades per dur a terme el 
+tractament.
 
 \section{Mètodes numèrics}
 
@@ -345,10 +343,18 @@ del cor i envoltat per grans quantitats de sang en circulació contínua, podem 
 la mateixa que la del cos, és a dir, $T_c$.
 
 
+\subsection{Solució analítica}
+Fent servir l'annex de l'enunciat de la pràctica, trobem la solució analítica de l'equació (\ref{fourier}) en forma de sèrie de 
+Fourier:
+\begin{equation}
+    T(x,t)=\sum_{n=1}^{\infty} b_n \frac{1-\exp\left(-(2n-1)^2\pi^2t\right)}{(2n-1)^2\pi^2}\sin\left((2n-1)\pi x\right)
+\end{equation}
+
+
 \subsection{Mètode d'Euler explícit}
 
-A continuació fem servir el mètode d'Euler implícit per aproximar la solució de l'equació de Fourier normalitzada, Eq. (\ref{fouriernorm}). 
-Donat que es tracta d'un mètode implícit, és a dir, que consisteix a calcular el valor següent de la funció a partir del valor actual, 
+A continuació fem servir el mètode d'Euler explícit per aproximar la solució de l'equació de Fourier normalitzada, Eq. (\ref{fouriernorm}). 
+Donat que es tracta d'un mètode explícit, és a dir, que consisteix a calcular el valor següent de la funció a partir del valor actual, 
 partim de l'equació (\ref{fouriernorm}) i fem la derivada temporal per la dreta i la derivada espacial segona centrada:
 
 \begin{equation*}
@@ -357,9 +363,8 @@ partim de l'equació (\ref{fouriernorm}) i fem la derivada temporal per la dreta
 
 Ara, substituïm a l'equació diferencial i aïllem $T_j^{i+1}$, obtenint l'equació de recurrència que hem 
 d'implementar en codi Python:
-
 \begin{equation}
-    T_j^{i+1} = \dfrac{\Delta \widetilde{t}}{\Delta \widetilde{x}}(T_{j+1}^i - 2 T_j^i + T_{j-1}^i) + T_j^i + \Delta \widetilde{t}
+    T_j^{i+1} = \dfrac{\Delta \widetilde{t}}{(\Delta \widetilde{x})^2}(T_{j+1}^i - 2 T_j^i + T_{j-1}^i) + T_j^i + \Delta \widetilde{t}
 \end{equation}
 
 
@@ -382,14 +387,33 @@ A partir d'aquesta, utilitzant el mètode de Gauss-Seidel trobem la següent rel
 
 En aquesta pràctica es van explorar els casos $\Delta\tilde{t} = \left(\Delta\tilde{x}\right)^2 \; i \; \Delta\tilde{t} = 0.5 \left(\Delta\tilde{x}\right)^2$.
 
+
+
 \subsection{Mètode de Crank Nicolson}
 
+Per resoldre numèricament l’equació del calor adimensionalitzada, l'equació (\ref{fouriernorm}), s’ha implementat el mètode de 
+Crank-Nicolson en Python. Aquest mètode consisteix a aproximar la derivada temporal mitjançant una diferència finita i la 
+derivada espacial de segon ordre mitjançant la mitjana de les aproximacions als instants temporals actual i posterior.
 
-Per resoldre numèricament l’equació del calor adimensionalitzada s’ha implementat el mètode de Crank-Nicolson en Python. Aquest mètode consisteix a aproximar la derivada temporal mitjançant una diferència finita i la derivada espacial de segon ordre mitjançant la mitjana de les aproximacions als instants temporals actual i posterior.
+La discretització de l’equació diferencial dona lloc a un sistema d’equacions lineals que s’ha expressat matricialment mitjançant 
+la següent fórmula de recurrència:
 
-La discretització de l’equació diferencial dona lloc a un sistema d’equacions lineals que s’ha expressat matricialment. Per resoldre’l a cada pas temporal s’ha utilitzat la factorització LU, implementada mitjançant la llibreria SciPy.
+\[
+\left(I-\frac{r}{2}A\right)T^{n+1}
+=
+\left(I+\frac{r}{2}A\right)T^n
++\Delta t\,\mathbf{1},
+\]
 
-S’han estudiat dos passos temporals diferents, $\Delta t=(\Delta x)^2$ i $\Delta t=0.5(\Delta x)^2$, fins a arribar al temps adimensional (t=0.025).
+on \(I\) representa la matriu identitat, \(A\) és la matriu associada a la discretització espacial de la segona derivada, 
+\(T^n\) és el vector de temperatures al pas temporal actual i \(T^{n+1}\) és el vector corresponent al pas temporal següent. 
+A més, \(r=\frac{\Delta t}{(\Delta x)^2}\) i \(\mathbf{1}\) és un vector amb tots els components iguals a 1, que incorpora el 
+terme font de l’equació.
+
+Per resoldre el sistema a cada pas temporal s’ha utilitzat el mètode de Gauss-Seidel.
+
+Finalment, hem estudiat dos passos temporals diferents, \(\Delta t=(\Delta x)^2\) i \(\Delta t=0.5(\Delta x)^2\), fins a 
+arribar al temps adimensional \(t=0.025\).
 
 \section{Anàlisi de resultats}
 
@@ -452,13 +476,15 @@ $\Delta \widetilde{t} = 0.49(\Delta \widetilde{x})^2$ i $\Delta \widetilde{t} = 
  tal i com demostra l'ordre de magnitud de l'error. També podem observar que, tal i com és d'esperar, quan disminuïm l'amplada del 
 mallat i augmentem el nombre de punts, l'error disminueix. Donat que hem obtingut una diferència de temperatura 
 $\Delta T < 0.003$ respecte la solució analítica, i recordant que estem treballant amb temperatures al voltant dels 50 $^\circ$C 
-considerem que és tracta d'un error acceptable i, així doncs, es tracta d0uns resultats numèrics força precisos.
+considerem que és tracta d'un error acceptable i, així doncs, es tracta d'uns resultats numèrics força precisos.
 
 En cas de que no coneixessim la solució analítica, podríem comprovar que el programa va bé modificant el mallat temporal. Si 
 el programa funciona correctament hauria de convergir cap a una solució en disminuir l'amplada del mallat temporal i, en 
 conseqüència, augmentant el nombre de punts. 
 
+
 \subsection{Euler implícit}
+
 
 \begin{figure}[h]
     \centering
@@ -492,22 +518,70 @@ $\Delta T \approx 0.010\,\mathrm{K}$ i $\Delta T \approx 0.006\,\mathrm{K}$, res
 comparades amb una temperatura de l'ordre de $50\,^\circ\mathrm{C}$. Per tant, considerem que es tracta d'un error 
 acceptable i que els resultats numèrics són força precisos.
 
+
+
+
 \subsection{Crank-Nicolson}
 
-Les solucions numèriques obtingudes amb els dos passos temporals estudiats presenten una gran coincidència amb la solució analítica, tal com s’observa a la primera gràfica.
+A continuació, es comparen els resultats amb la solució analítica i s'analitza l'error comès.
 
-Respecte a l’error numèric, s’obtenen errors màxims de l’ordre de $(10^{-6})$ en ambdós casos. S’observa que la reducció del pas temporal no comporta una disminució significativa de l’error. Això indica que, per a aquesta discretització, la contribució de l’error espacial és predominant.
+\begin{figure}[h]
+    \centering
+    \begin{minipage}{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{grafica_temperatures.png}
+        \caption{Comparació entre la solució analítica i les dues solucions numèriques obtingudes amb el mètode de Crank-Nicolson.}
+        \label{fig 1}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{grafica_errors.png}
+        \caption{Error absolut de les dues solucions numèriques respecte de la solució analítica.}
+        \label{fig 2}
+    \end{minipage}
+\end{figure}
 
-Finalment, la distribució de temperatura en graus Celsius mostra que la temperatura màxima al centre del teixit és aproximadament de $53.17\,^\circ\mathrm{C}$, mentre que als extrems es manté a $36.5\,^\circ\mathrm{C}$. Per tant, la temperatura supera els $50\,^\circ\mathrm{C}$ a la regió central, però no arriba als $80\,^\circ\mathrm{C}$ en cap punt del domini.
+A la figura \ref{fig 1} es representen les tres solucions obtingudes. Com es pot observar, les dues aproximacions numèriques 
+pràcticament coincideixen amb la solució analítica, fins al punt que les tres corbes se superposen gairebé completament.
 
-Aquests resultats indiquen que, en el temps estudiat, s’assoleix el mínim de temperatura necessària per provocar la mort cel·lular sense arribar al límit d’evaporació.
+Per comprovar amb més detall la precisió dels resultats, hem representat l'error absolut entre les solucions numèriques i 
+l'analítica. A la figura \ref{fig 2} es pot observar que els errors són molt petits, ja que es mantenen al voltant de 
+l'ordre de \(10^{-6}\). Com es pot veure, reduir el pas temporal a la meitat i duplicar el nombre de passos, passant de 250 a 500, no suposa una 
+millora en la precisió. De fet, el segon cas presenta un error lleugerament més gran, tot i que la diferència entre tots dos 
+és pràcticament negligible.
+
+Per tant, en aquest cas, el primer pas temporal resulta més convenient, ja que permet obtenir una precisió molt similar amb 
+la meitat de passos temporals i, per tant, amb un menor cost computacional.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.5\linewidth]{grafica_celsius.png}
+    \caption{Distribució de la temperatura en graus Celsius al temps final de la simulació. Les línies discontínues indiquen els límits de 50 °C i 80 °C.}
+    \label{fig 3}
+\end{figure}
 
 
-\subsection{Comparació de l'error}
+La gràfica \ref{fig 3} mostra que la temperatura arriba a un màxim aproximat de $53\,^\circ\mathrm{C}$ al centre del domini. 
+Tota la regió malalta ($0.375\leq\tilde{x}\leq0.625$) supera els $50\,^\circ\mathrm{C}$ sense arribar als $80\,^\circ\mathrm{C}$, 
+de manera que es compleixen els dos primers objectius del tractament. Llavors, podem afirmar que el mètode de 
+Crank-Nicolson proporciona resultats prou precisos per als dos passos temporals estudiats.
 
 
+\subsection{Comparació dels mètodes d'Euler explícit, Euler implícit i Crank-Nicolson}
+ 
 
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.7\linewidth]{comparacio_error.png}
+    \caption{Comparació dels errors dels mètodes d'Euler explícit, implícit i Crank-Nicolson}
+    \label{comparacio}
+\end{figure}
 
+Segons la gràfica de la figura \ref{comparacio}, observem que el mètode d'Euler explícit amb $a=0.25$ és el que ofereix un menor 
+error numèric. Això es deu al fet que utilitza un pas temporal més petit que els altres mètodes i, per tant, redueix l'error de 
+discretització temporal i permet obtenir una aproximació més precisa de la solució analítica. Per tant, tot i que els mètodes 
+implícits són estables, en aquest cas l'Euler explícit amb $a=0.25$ proporciona els resultats més precisos.
 
 \section{Resolució del problema}
 
@@ -539,6 +613,19 @@ dels teixits.
 
 \section{Conclusions}
 
+En aquesta pràctica hem modelitzat la transferència de calor durant una ablació cardíaca mitjançant l'equació de Fourier i 
+hem simplificat l'estudi amb una normalització. Hem implementat tres mètodes numèrics: Euler explícit, Euler implícit i 
+Crank-Nicolson; i hem comparat l'estabilitat i la precisió amb la solució analítica.
+
+Els resultats mostren que l'Euler explícit només és estable per determinats mallats temporals (el cas $\Delta t = 0.51(\Delta x)^2$ és inestable), 
+mentre que els mètodes implícits no presenten aquesta restricció. En general, els tres mètodes ofereixen resultats precisos, amb 
+errors numèrics petits, tot i que cal destacar que el mètode d'Euler explícit ha sigut el que ha proporcionat un error menor. 
+Per aquest motiu, hem estimat amb aquest mètode un temps de tractament d'aproximadament \(58.34\,\mathrm{s}\) per assolir les 
+temperatures desitjades a la zona malalta, sense superar els \(80\,^\circ\mathrm{C}\). També hem identificat limitacions del 
+model, com la distribució uniforme de la potència i l'absència de pèrdues de calor, que es podrien millorar incorporant els 
+efectes dels elèctrodes i la circulació sanguínia.
+
+
 
 \newpage
 
@@ -547,17 +634,21 @@ dels teixits.
 \subsection{Contribucions}
 
 Per l'elaboració de la pràctica ens hem dividit la feina de tal forma que cada membre del grup s'encarrega d'un mètode numèric 
-diferent. Cadascú ha trobat l'algorisme del seu mètode, l'ha implementat en Python i ha redactat la part teòrica del mètode 
-i els resultats obtinguts. El Víctor s'ha encarregat del mètode d'Euler explícit i la comparació dels errors, 
+diferent. Cada membre del grup ha trobat l'algorisme del seu mètode, l'ha implementat en Python i ha redactat la part teòrica 
+del mètode i els resultats obtinguts. El Víctor s'ha encarregat del mètode d'Euler explícit i la comparació dels errors, 
 el Gabriel de l'implícit i l'Aleix del Crank-Nicolson. El Gabriel ha calculat la solució analítica de l'equació diferencial. 
-A la redacció de l'informe, el Víctor ha redactat la introducció teòrica de la pràctica (excepte els subapartats dels mètodes implícits) 
-i l'Aleix s'ha encarregat de les conclusions.
+A la redacció de l'informe, el Víctor ha redactat la introducció teòrica de la pràctica (excepte els subapartats dels mètodes 
+implícits), les parts corresponents a l'Euler explícit i la comparació d'errors, el Gabriel ha escrit les parts corresponents a 
+l'Euler implícit i l'Aleix s'ha encarregat de les parts corresponents al Crank-Nicolson i ha fet les conclusions.
+
+
 
 \subsection{Ús d'IA}
+
 Hem utilitzat ChatGPT com a eina de suport durant el desenvolupament de la pràctica, principalment per 
 recerca bibliogràfica per resoldre dubtes sobre els mètodes numèrics, revisió de l'ortografia i per ajudar a detectar errors 
 de compilació en els codis, principalment el LaTex. També per consultar ràpidament com representar algun símbol a LaTex quan no 
-recordàvem o no sabíem quin era la seva comanda.
+recordàvem o no sabíem quina era la seva comanda.
 
 Els codis, els resultats obtinguts i la seva interpretació han estat elaborats pels membres del grup, que són responsables del 
 contingut final del treball. 
@@ -570,12 +661,13 @@ procés més lent.
 
 
 
+
 \newpage
 
 \section{Annex}
-
 Els codis que hem fet servir en aquesta pràctica es troben en un repositori públic de GitHub. Aquí hi ha un enllaç al repositori:
 \color{blue} \href{https://github.com/Victor-sli/Codis-practica1-Grup-G111}{Codis Grup G111}. \color{black}
+
 
 
 \end{document}
