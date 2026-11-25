@@ -454,6 +454,9 @@ mallat i augmentem el nombre de punts, l'error disminueix. Donat que hem obtingu
 $\Delta T < 0.003$ respecte la solució analítica, i recordant que estem treballant amb temperatures al voltant dels 50 $^\circ$C 
 considerem que és tracta d'un error acceptable i, així doncs, es tracta d0uns resultats numèrics força precisos.
 
+En cas de que no coneixessim la solució analítica, podríem comprovar que el programa va bé modificant el mallat temporal. Si 
+el programa funciona correctament hauria de convergir cap a una solució en disminuir l'amplada del mallat temporal i, en 
+conseqüència, augmentant el nombre de punts. 
 
 \subsection{Euler implícit}
 
@@ -543,11 +546,26 @@ dels teixits.
 
 \subsection{Contribucions}
 
-Per elaborar aquesta pràctica ens hem dividit la feina per tal de
-
+Per l'elaboració de la pràctica ens hem dividit la feina de tal forma que cada membre del grup s'encarrega d'un mètode numèric 
+diferent. Cadascú ha trobat l'algorisme del seu mètode, l'ha implementat en Python i ha redactat la part teòrica del mètode 
+i els resultats obtinguts. El Víctor s'ha encarregat del mètode d'Euler explícit i la comparació dels errors, 
+el Gabriel de l'implícit i l'Aleix del Crank-Nicolson. El Gabriel ha calculat la solució analítica de l'equació diferencial. 
+A la redacció de l'informe, el Víctor ha redactat la introducció teòrica de la pràctica (excepte els subapartats dels mètodes implícits) 
+i l'Aleix s'ha encarregat de les conclusions.
 
 \subsection{Ús d'IA}
+Hem utilitzat ChatGPT com a eina de suport durant el desenvolupament de la pràctica, principalment per 
+recerca bibliogràfica per resoldre dubtes sobre els mètodes numèrics, revisió de l'ortografia i per ajudar a detectar errors 
+de compilació en els codis, principalment el LaTex. També per consultar ràpidament com representar algun símbol a LaTex quan no 
+recordàvem o no sabíem quin era la seva comanda.
 
+Els codis, els resultats obtinguts i la seva interpretació han estat elaborats pels membres del grup, que són responsables del 
+contingut final del treball. 
+
+Considerem que la IA ha sigut una eina de suport que ha servit per agilitzar el desenvolupament de la pràctica, donat que en 
+alguns casos no érem capaços d'identificar quin era el motiu pel qual el document de l'informe no compilava o per trobar símbols. 
+Tot i això, considerem que sense cap eina d'IA seríem capaços de realitzar d'igual forma aquesta pràctica, llevat que seria un 
+procés més lent.
 
 
 
@@ -555,5 +573,9 @@ Per elaborar aquesta pràctica ens hem dividit la feina per tal de
 \newpage
 
 \section{Annex}
+
+Els codis que hem fet servir en aquesta pràctica es troben en un repositori públic de GitHub. Aquí hi ha un enllaç al repositori:
+\color{blue} \href{https://github.com/Victor-sli/Codis-practica1-Grup-G111}{Codis Grup G111}. \color{black}
+
 
 \end{document}
